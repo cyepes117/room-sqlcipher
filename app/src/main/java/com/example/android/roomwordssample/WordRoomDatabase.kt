@@ -24,6 +24,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 
 /**
  * This is the backend. The database. This used to be done by the OpenHelper.
@@ -45,16 +47,21 @@ abstract class WordRoomDatabase : RoomDatabase() {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
+                val builder = Room.databaseBuilder(
                         context.applicationContext,
                         WordRoomDatabase::class.java,
-                        "word_database"
+                        "word_database.db"
                 )
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this codelab.
                         .fallbackToDestructiveMigration()
                         .addCallback(WordDatabaseCallback(scope))
-                        .build()
+
+                //SQLCipher
+                val factory = SupportFactory(SQLiteDatabase.getBytes("PassPhrase".toCharArray()))
+                builder.openHelperFactory(factory)
+
+                val instance = builder.build()
                 INSTANCE = instance
                 // return instance
                 instance
