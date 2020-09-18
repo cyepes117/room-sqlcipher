@@ -61,9 +61,6 @@ dependencies {
     // UI
     implementation "com.google.android.material:material:$rootProject.materialVersion"
 
-    //SQLCipher
-    implementation "net.zetetic:android-database-sqlcipher:$rootProject.sqlcipher_version@aar"
-
     // Testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
